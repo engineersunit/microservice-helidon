@@ -11,6 +11,10 @@ import io.helidon.config.Config;
 import io.helidon.webserver.Routing;
 import io.helidon.webserver.WebServer;
 
+import java.time.Instant;
+import java.time.Clock;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 
 /**
@@ -44,9 +48,11 @@ public final class Main {
         // By default this will pick up application.yaml from the classpath
         Config config = Config.create();
 
-        WebServer server = WebServer.builder(createRouting(config))
+        WebServer server = WebServer.
+                builder(createRouting(config))
                 .config(config.get("server"))
-                .addMediaSupport(JsonpSupport.create())                .build();
+                .addMediaSupport(JsonpSupport.create())
+                .build();
 
         Single<WebServer> webserver = server.start();
 
@@ -54,6 +60,7 @@ public final class Main {
         // print a message at shutdown. If unsuccessful, print the exception.
         webserver.thenAccept(ws -> {
             System.out.println("WEB server is up! http://localhost:" + ws.port() + "/greet");
+            System.out.println("The time now is: " + ZonedDateTime.ofInstant(Instant.now(),ZoneId.of("Asia/Kolkata")));
             ws.whenShutdown().thenRun(() -> System.out.println("WEB server is DOWN. Good bye!"));
         })
         .exceptionallyAccept(t -> {
@@ -71,7 +78,8 @@ public final class Main {
      * @param config configuration of this server
      */
     private static Routing createRouting(Config config) {
-        SimpleGreetService simpleGreetService = new SimpleGreetService(config);        GreetService greetService = new GreetService(config);
+        SimpleGreetService simpleGreetService = new SimpleGreetService(config);
+        GreetService greetService = new GreetService(config);
         HealthSupport health = HealthSupport.builder()
                 .addLiveness(HealthChecks.healthChecks()) // Adds a convenient set of checks
                 .build();

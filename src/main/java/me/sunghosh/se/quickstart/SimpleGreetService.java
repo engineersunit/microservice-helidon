@@ -56,7 +56,7 @@ public class SimpleGreetService implements Service {
      * @param response the server response
      */
     private void getDefaultMessageHandler(ServerRequest request, ServerResponse response) {
-        String msg = String.format("%s %s!", greeting, "Helidon");
+        String msg = String.format("%s %s!", greeting, "World");
         LOGGER.info("Greeting message is " + msg);
         JsonObject returnObject = JSON.createObjectBuilder()
                                       .add("message", msg)
