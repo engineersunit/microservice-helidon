@@ -12,7 +12,6 @@ import io.helidon.webserver.Routing;
 import io.helidon.webserver.WebServer;
 
 import java.time.Instant;
-import java.time.Clock;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
